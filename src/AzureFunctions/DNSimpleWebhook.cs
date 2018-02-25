@@ -1,6 +1,9 @@
 // Copyright (c) Martin Costello, 2018. All rights reserved.
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 
+using System.Threading.Tasks;
+using MartinCostello.AzureFunctions.DNSimple;
+using MartinCostello.AzureFunctions.DNSimple.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
@@ -9,21 +12,32 @@ using Microsoft.Extensions.Logging;
 
 namespace MartinCostello.AzureFunctions
 {
+    /// <summary>
+    /// A class representing the entry-point for a DNSimple webhook request. This class cannot be inherited.
+    /// </summary>
     public static class DNSimpleWebhook
     {
+        /// <summary>
+        /// Runs the function for a DNSimple webhook request.
+        /// </summary>
+        /// <param name="request">The HTTP request.</param>
+        /// <param name="logger">The logger to use.</param>
+        /// <returns>
+        /// The result of the webhook.
+        /// </returns>
         [FunctionName("DNSimpleWebhook")]
-        public static IActionResult Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = "webhooks/dnsimple")] HttpRequest request,
+        public static async Task<IActionResult> Run(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "webhooks/dnsimple")] HttpRequest request,
             ILogger logger)
         {
-            logger.LogInformation("HTTP trigger function processed a request for DNSimpleWebhook.");
+            var service = new DNSimpleService(logger);
 
-            var value = new
+            WebhookResult result = await service.ProcessAsync(request);
+
+            return new JsonResult(result)
             {
-                message = "Response from DNSimpleWebhook."
+                StatusCode = result.StatusCode,
             };
-
-            return new JsonResult(value);
         }
     }
 }
