@@ -58,6 +58,11 @@ namespace MartinCostello.AzureFunctions.DNSimple
                 }
                 else
                 {
+                    _logger.LogInformation(
+                        "Received DNSimple webhook event {Name} with request Id {RequestId}.",
+                        payload.Name,
+                        payload.RequestId);
+
                     result.RequestId = payload.RequestId;
                     result.Message = $"Webhook '{payload.RequestId}' acknowledged.";
 
