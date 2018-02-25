@@ -1,0 +1,13 @@
+{
+  "ConnectionStrings": {
+  },
+  "Host": {
+    "CORS": "*",
+    "LocalHttpPort": 7071
+  },
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsDashboard": "UseDevelopmentStorage=true",
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true"
+  }
+}

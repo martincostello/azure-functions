@@ -1,0 +1,66 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2036
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureFunctions", "src\AzureFunctions\AzureFunctions.csproj", "{7FFC997F-CFD1-459D-BB2B-A8F5EF938FA9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1C34EAC2-8F8F-403F-A7E3-5A7DEC1E9C09}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{37C847B2-8840-4771-B0A8-2EE98DDB9022}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureFunctions.Tests", "tests\AzureFunctions.Tests\AzureFunctions.Tests.csproj", "{7888A115-3473-4BBE-8955-E263AADC611C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{ECFE585A-7DC5-463D-A1B5-340383CC6228}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		AzureFunctions.ruleset = AzureFunctions.ruleset
+		Build.ps1 = Build.ps1
+		build.sh = build.sh
+		CODE_OF_CONDUCT.md = CODE_OF_CONDUCT.md
+		CommonAssemblyInfo.cs = CommonAssemblyInfo.cs
+		Directory.Build.props = Directory.Build.props
+		Directory.Build.targets = Directory.Build.targets
+		global.json = global.json
+		LICENSE = LICENSE
+		NuGet.config = NuGet.config
+		README.md = README.md
+		stylecop.json = stylecop.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{8234696E-DF1D-4359-9C2D-5445D01588C7}"
+	ProjectSection(SolutionItems) = preProject
+		.github\CONTRIBUTING.md = .github\CONTRIBUTING.md
+		.github\ISSUE_TEMPLATE.md = .github\ISSUE_TEMPLATE.md
+		.github\PULL_REQUEST_TEMPLATE.md = .github\PULL_REQUEST_TEMPLATE.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7FFC997F-CFD1-459D-BB2B-A8F5EF938FA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7FFC997F-CFD1-459D-BB2B-A8F5EF938FA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7FFC997F-CFD1-459D-BB2B-A8F5EF938FA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7FFC997F-CFD1-459D-BB2B-A8F5EF938FA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7888A115-3473-4BBE-8955-E263AADC611C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7888A115-3473-4BBE-8955-E263AADC611C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7888A115-3473-4BBE-8955-E263AADC611C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7888A115-3473-4BBE-8955-E263AADC611C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7FFC997F-CFD1-459D-BB2B-A8F5EF938FA9} = {1C34EAC2-8F8F-403F-A7E3-5A7DEC1E9C09}
+		{7888A115-3473-4BBE-8955-E263AADC611C} = {37C847B2-8840-4771-B0A8-2EE98DDB9022}
+		{8234696E-DF1D-4359-9C2D-5445D01588C7} = {ECFE585A-7DC5-463D-A1B5-340383CC6228}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EEDFC93E-B949-493C-A5F1-F22175F982C1}
+	EndGlobalSection
+EndGlobal

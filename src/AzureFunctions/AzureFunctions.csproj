@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyTitle>AzureFunctions</AssemblyTitle>
+    <AzureFunctionsVersion>v2</AzureFunctionsVersion>
+    <DebugType>full</DebugType>
+    <Description>Custom Azure Functions.</Description>
+    <Summary>Custom Azure Functions.</Summary>
+    <RootNamespace>MartinCostello.AzureFunctions</RootNamespace>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.8" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="host.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="local.settings.json" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="Never" />
+  </ItemGroup>
+</Project>
