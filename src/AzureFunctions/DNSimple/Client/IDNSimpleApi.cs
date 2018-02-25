@@ -11,7 +11,7 @@ namespace MartinCostello.AzureFunctions.DNSimple.Client
     /// <summary>
     /// Defines the interface to the DNSimple API.
     /// </summary>
-    [Headers("Accept: application/json")]
+    [Headers("Authorization: Bearer")]
     public interface IDNSimpleApi
     {
         /// <summary>
@@ -64,5 +64,14 @@ namespace MartinCostello.AzureFunctions.DNSimple.Client
         /// </returns>
         [Get("/v2/{accountId}/domains/{domainId}/certificates/{certificateId}/private_key")]
         Task<Response<CertificatePrivateKey>> GetCertificatePrivateKeyAsync(int accountId, int domainId, int certificateId);
+
+        /// <summary>
+        /// Gets the identity associated with the current token as an asynchronous operation.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="Task{TResult}"/> representing the asynchronous operation to get the current identity.
+        /// </returns>
+        [Get("/v2/whoami")]
+        Task<Response<Who>> GetWhoAmIAsync();
     }
 }
