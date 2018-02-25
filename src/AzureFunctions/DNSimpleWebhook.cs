@@ -1,9 +1,8 @@
 // Copyright (c) Martin Costello, 2018. All rights reserved.
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 
+using System;
 using System.Threading.Tasks;
-using MartinCostello.AzureFunctions.DNSimple;
-using MartinCostello.AzureFunctions.DNSimple.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
@@ -30,14 +29,20 @@ namespace MartinCostello.AzureFunctions
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "webhooks/dnsimple")] HttpRequest request,
             ILogger logger)
         {
-            var service = new DNSimpleService(logger);
+            string hostUrl = GetOption("DNSIMPLE_URL") ?? "https://api.dnsimple.com";
+            string token = GetOption("DNSIMPLE_TOKEN") ?? string.Empty;
 
-            WebhookResult result = await service.ProcessAsync(request);
+            var apiFactory = new DNSimple.Client.DNSimpleApiFactory(hostUrl, token);
+            var service = new DNSimple.DNSimpleService(apiFactory, logger);
+
+            var result = await service.ProcessAsync(request);
 
             return new JsonResult(result)
             {
                 StatusCode = result.StatusCode,
             };
         }
+
+        private static string GetOption(string name) => Environment.GetEnvironmentVariable(name, EnvironmentVariableTarget.Process);
     }
 }

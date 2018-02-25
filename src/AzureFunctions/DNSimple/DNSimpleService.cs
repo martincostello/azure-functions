@@ -3,6 +3,7 @@
 
 using System;
 using System.Threading.Tasks;
+using MartinCostello.AzureFunctions.DNSimple.Client;
 using MartinCostello.AzureFunctions.DNSimple.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.WebJobs.Extensions.Http;
@@ -17,16 +18,23 @@ namespace MartinCostello.AzureFunctions.DNSimple
     public class DNSimpleService
     {
         /// <summary>
-        /// The <see cref="ILogger"/> to use.
+        /// The <see cref="IDNSimpleApiFactory"/> to use. This field is read-only.
+        /// </summary>
+        private readonly IDNSimpleApiFactory _apiFactory;
+
+        /// <summary>
+        /// The <see cref="ILogger"/> to use. This field is read-only.
         /// </summary>
         private readonly ILogger _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DNSimpleService"/> class.
         /// </summary>
+        /// <param name="apiFactory">The <see cref="IDNSimpleApiFactory"/> to use.</param>
         /// <param name="logger">The <see cref="ILogger"/> to use.</param>
-        public DNSimpleService(ILogger logger)
+        public DNSimpleService(IDNSimpleApiFactory apiFactory, ILogger logger)
         {
+            _apiFactory = apiFactory;
             _logger = logger;
         }
 
@@ -68,8 +76,7 @@ namespace MartinCostello.AzureFunctions.DNSimple
 
                     if (CanHandlePayload(payload))
                     {
-                        // TODO Handle the certificate re-issue
-                        result.Processed = true;
+                        result.Processed = await ProcessCertificateAsync(payload);
                     }
                 }
             }
@@ -123,6 +130,12 @@ namespace MartinCostello.AzureFunctions.DNSimple
             _logger.LogDebug(@"Request content: ""{Content}""", json);
 
             return JsonConvert.DeserializeObject<WebhookPayload>(json);
+        }
+
+        private async Task<bool> ProcessCertificateAsync(WebhookPayload payload)
+        {
+            await Task.Delay(1);
+            return true;
         }
     }
 }
