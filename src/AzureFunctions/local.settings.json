@@ -9,6 +9,7 @@
   "Values": {
     "AzureWebJobsDashboard": "UseDevelopmentStorage=true",
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "CERTIFICATE_STORE_CONNECTION": "UseDevelopmentStorage=true",
     "DNSIMPLE_URL": "https://api.sandbox.dnsimple.com",
     "DNSIMPLE_TOKEN": ""
   }
