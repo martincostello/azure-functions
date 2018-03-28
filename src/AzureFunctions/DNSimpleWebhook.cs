@@ -29,11 +29,19 @@ namespace MartinCostello.AzureFunctions
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "webhooks/dnsimple")] HttpRequest request,
             ILogger logger)
         {
+            string certificatePassword = GetOption("CERTIFICATE_PASSWORD") ?? string.Empty;
+            string connectionString = GetOption("CERTIFICATE_STORE_CONNECTION") ?? "UseDevelopmentStorage=true";
             string hostUrl = GetOption("DNSIMPLE_URL") ?? "https://api.dnsimple.com";
             string token = GetOption("DNSIMPLE_TOKEN") ?? string.Empty;
 
             var apiFactory = new DNSimple.Client.DNSimpleApiFactory(hostUrl, token);
-            var service = new DNSimple.DNSimpleService(apiFactory, logger);
+            var blobClient = new Blob.BlobClient(connectionString);
+
+            var service = new DNSimple.DNSimpleService(
+                certificatePassword,
+                apiFactory,
+                blobClient,
+                logger);
 
             var result = await service.ProcessAsync(request);
 
