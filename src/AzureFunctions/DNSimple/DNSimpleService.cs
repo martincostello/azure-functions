@@ -98,6 +98,10 @@ namespace MartinCostello.AzureFunctions.DNSimple
 
                 result.Message = "Internal server error.";
                 result.StatusCode = StatusCodes.Status500InternalServerError;
+
+#if DEBUG
+                result.Details = ex;
+#endif
             }
 
             return result;

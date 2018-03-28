@@ -33,5 +33,11 @@ namespace MartinCostello.AzureFunctions.DNSimple.Models
         /// </summary>
         [JsonProperty("statusCode")]
         public int StatusCode { get; set; }
+
+        /// <summary>
+        /// Gets or sets any details associated with the error.
+        /// </summary>
+        [JsonProperty("details", NullValueHandling = NullValueHandling.Ignore)]
+        public object Details { get; set; }
     }
 }
