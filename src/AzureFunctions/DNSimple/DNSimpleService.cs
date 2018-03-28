@@ -179,6 +179,21 @@ namespace MartinCostello.AzureFunctions.DNSimple
             int domainId = certificate.DomainId;
             int certificateId = certificate.Id;
 
+            if (accountId == 0)
+            {
+                throw new InvalidOperationException("Failed to deserialize the account Id from the payload.");
+            }
+
+            if (domainId == 0)
+            {
+                throw new InvalidOperationException("Failed to deserialize the domain Id from the payload.");
+            }
+
+            if (certificateId == 0)
+            {
+                throw new InvalidOperationException("Failed to deserialize the certificate Id from the payload.");
+            }
+
             _logger.LogInformation(
                 "Getting data from account {AccountId} for domain {DomainId} and certificate {CertificateId}.",
                 accountId,
