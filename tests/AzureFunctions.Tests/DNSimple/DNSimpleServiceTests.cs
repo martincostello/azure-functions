@@ -33,12 +33,12 @@ namespace MartinCostello.AzureFunctions.DNSimple
             // Arrange
             WebhookPayload payload = CreatePayload();
 
+            string certificatePassword = Guid.NewGuid().ToString();
             IDNSimpleApiFactory apiFactory = CreateDNSimpleApiFactory();
             IBlobClient blobClient = CreateBlobClient();
             ILogger logger = new XunitLogger(_outputHelper);
 
-            DNSimpleService service = new DNSimpleService(apiFactory, blobClient, logger);
-
+            var service = new DNSimpleService(certificatePassword, apiFactory, blobClient, logger);
             var request = new MockHttpRequest(payload);
 
             // Act

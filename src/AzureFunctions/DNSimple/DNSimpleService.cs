@@ -23,6 +23,11 @@ namespace MartinCostello.AzureFunctions.DNSimple
     public class DNSimpleService
     {
         /// <summary>
+        /// The password to use for certificates. This field is read-only.
+        /// </summary>
+        private readonly string _certificatePassword;
+
+        /// <summary>
         /// The <see cref="IDNSimpleApiFactory"/> to use. This field is read-only.
         /// </summary>
         private readonly IDNSimpleApiFactory _apiFactory;
@@ -40,11 +45,17 @@ namespace MartinCostello.AzureFunctions.DNSimple
         /// <summary>
         /// Initializes a new instance of the <see cref="DNSimpleService"/> class.
         /// </summary>
+        /// <param name="certificatePassword">The password to use to protect certificate private keys.</param>
         /// <param name="apiFactory">The <see cref="IDNSimpleApiFactory"/> to use.</param>
         /// <param name="blobClient">The <see cref="IBlobClient"/> to use.</param>
         /// <param name="logger">The <see cref="ILogger"/> to use.</param>
-        public DNSimpleService(IDNSimpleApiFactory apiFactory, IBlobClient blobClient, ILogger logger)
+        public DNSimpleService(
+            string certificatePassword,
+            IDNSimpleApiFactory apiFactory,
+            IBlobClient blobClient,
+            ILogger logger)
         {
+            _certificatePassword = certificatePassword;
             _apiFactory = apiFactory;
             _blobClient = blobClient;
             _logger = logger;
@@ -221,8 +232,7 @@ namespace MartinCostello.AzureFunctions.DNSimple
 
             using (X509Certificate2 privateCertificate = X509CertificateHelpers.Combine(data.Server, data.PrivateKeyPem))
             {
-                // TODO Set an appropriate password on the certificate
-                data.PrivateKeyPfx = privateCertificate.Export(X509ContentType.Pfx, string.Empty);
+                data.PrivateKeyPfx = privateCertificate.Export(X509ContentType.Pfx, _certificatePassword);
             }
 
             _logger.LogTrace("Extracted PFX private key from PEM private key.");
