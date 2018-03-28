@@ -253,13 +253,16 @@ namespace MartinCostello.AzureFunctions.DNSimple
             IDictionary<string, string> metadata = X509CertificateHelpers.GetMetadata(certificate);
 
             string commonName = certificate.Subject.Substring(3); // Remove "CN=" prefix
+            string safeCommonName = commonName.Replace(".", "-");
+
             string thumbprintLower = certificate.Thumbprint.ToLowerInvariant();
             string timestamp = certificate.NotBefore.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
 
-            string containerName = commonName.Replace(".", "-");
-            string blobPrefix = $"{thumbprintLower}_{timestamp}";
+            metadata["CommonName"] = commonName;
 
-            await UploadCertificatesAsync(data, containerName, blobPrefix, metadata);
+            string blobPrefix = $"{safeCommonName}_{thumbprintLower}_{timestamp}";
+
+            await UploadCertificatesAsync(data, "certificates", blobPrefix, metadata);
         }
 
         /// <summary>
