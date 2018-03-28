@@ -2,7 +2,7 @@
   "profiles": {
     "AzureFunctions": {
       "commandName": "Executable",
-      "executablePath": "%APPDATA%\\npm\\func.cmd",
+      "executablePath": "%APPDATA%\\npm\\node_modules\\azure-functions-core-tools\\bin\\func.exe",
       "commandLineArgs": "host start",
       "workingDirectory": "$(TargetDir)"
     }
