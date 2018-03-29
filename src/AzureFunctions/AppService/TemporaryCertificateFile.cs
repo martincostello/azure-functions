@@ -6,11 +6,11 @@ using System.IO;
 
 namespace MartinCostello.AzureFunctions.AppService
 {
-    internal sealed class TemporaryCertificateFile : IDisposable
+    public sealed class TemporaryCertificateFile : IDisposable
     {
         private bool _disposed;
 
-        internal TemporaryCertificateFile(byte[] rawData)
+        public TemporaryCertificateFile(byte[] rawData)
         {
             FileName = Path.GetTempFileName();
             File.WriteAllBytes(FileName, rawData);
