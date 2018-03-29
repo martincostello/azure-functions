@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using MartinCostello.AzureFunctions.AppService.Client;
@@ -88,9 +89,13 @@ namespace MartinCostello.AzureFunctions.AppService
 
         private async Task<byte[]> GetCertificateAsync(ICloudBlob blob)
         {
-            byte[] rawData = new byte[blob.Properties.Length];
+            byte[] rawData;
 
-            await blob.DownloadToByteArrayAsync(rawData, 0);
+            using (var stream = new MemoryStream())
+            {
+                await blob.DownloadToStreamAsync(stream);
+                rawData = stream.ToArray();
+            }
 
             return rawData;
         }
@@ -116,9 +121,7 @@ namespace MartinCostello.AzureFunctions.AppService
 
         private async Task<CertificateData> ParseCertificateAsync(ICloudBlob blob)
         {
-            if (blob == null ||
-                blob.Properties == null ||
-                blob.Properties.Length < 1)
+            if (blob == null)
             {
                 _logger.LogWarning("Not processing cloud blob as it is invalid.");
                 return null;
@@ -128,6 +131,12 @@ namespace MartinCostello.AzureFunctions.AppService
             var hostNames = new List<string>();
 
             byte[] rawData = await GetCertificateAsync(blob);
+
+            if (rawData == null || rawData.Length < 1)
+            {
+                _logger.LogWarning("Not processing cloud blob as contains no data.");
+                return null;
+            }
 
             using (var certificate = new X509Certificate2(rawData, _certificatePassword))
             {
@@ -176,7 +185,14 @@ namespace MartinCostello.AzureFunctions.AppService
                     continue;
                 }
 
-                bool isCertificateInstalled = string.Equals(binding.Value?.Inner?.Thumbprint, certificate.Thumbprint, StringComparison.OrdinalIgnoreCase);
+                if (binding.Value.Inner == null ||
+                    string.IsNullOrEmpty(binding.Value.Inner.Thumbprint))
+                {
+                    _logger.LogDebug("No inner binding is available for host name {0}.", hostName);
+                    continue;
+                }
+
+                bool isCertificateInstalled = string.Equals(binding.Value.Inner.Thumbprint, certificate.Thumbprint, StringComparison.OrdinalIgnoreCase);
 
                 if (isCertificateInstalled)
                 {
@@ -184,26 +200,25 @@ namespace MartinCostello.AzureFunctions.AppService
                     continue;
                 }
 
-                using (var certificateFile = new TemporaryCertificateFile(certificate.RawData))
-                {
-                    application = await application
-                        .Update()
-                        .DefineSslBinding()
-                        .ForHostname(hostName)
-                        .WithPfxCertificateToUpload(certificateFile.FileName, certificate.Password)
-                        .WithSniBasedSsl()
-                        .Attach()
-                        .ApplyAsync();
+                await _client.UpdateBindingAsync(
+                    application,
+                    hostName,
+                    certificate.RawData,
+                    certificate.Password);
 
-                    _logger.LogInformation(
-                        "Bound certificate with thumbprint {0} to host name {1} for App Service {2}.",
-                        certificate.Thumbprint,
-                        hostName,
-                        application.Name);
+                _logger.LogInformation(
+                    "Bound certificate with thumbprint {0} to host name {1} for App Service {2}.",
+                    certificate.Thumbprint,
+                    hostName,
+                    application.Name);
 
-                    bindingsUpdated++;
-                }
+                bindingsUpdated++;
             }
+
+            _logger.LogInformation(
+                "Updated {0:N0} host name binding(s) for App Service {1}.",
+                bindingsUpdated,
+                application.Name);
 
             return bindingsUpdated;
         }

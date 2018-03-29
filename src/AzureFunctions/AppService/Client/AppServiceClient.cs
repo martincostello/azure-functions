@@ -48,6 +48,26 @@ namespace MartinCostello.AzureFunctions.AppService.Client
             return (await service.WebApps.ListAsync()).ToList();
         }
 
+        /// <inheritdoc />
+        public Task<IWebApp> UpdateBindingAsync(
+            IWebApp application,
+            string hostName,
+            byte[] certificate,
+            string password)
+        {
+            using (var certificateFile = new TemporaryCertificateFile(certificate))
+            {
+                return application
+                    .Update()
+                    .DefineSslBinding()
+                        .ForHostname(hostName)
+                        .WithPfxCertificateToUpload(certificateFile.FileName, password)
+                        .WithSniBasedSsl()
+                        .Attach()
+                    .ApplyAsync();
+            }
+        }
+
         /// <summary>
         /// Creates an authenticated instance of <see cref="IAzure"/>.
         /// </summary>

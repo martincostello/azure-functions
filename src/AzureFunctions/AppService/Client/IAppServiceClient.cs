@@ -19,5 +19,22 @@ namespace MartinCostello.AzureFunctions.AppService.Client
         /// A <see cref="Task{TResult}"/> representing the asynchronous operation to get the available web applications.
         /// </returns>
         Task<ICollection<IWebApp>> GetApplicationsAsync();
+
+        /// <summary>
+        /// Updates a TLS binding for a web application as an asynchronous operation.
+        /// </summary>
+        /// <param name="application">The application to update the TLS binding for.</param>
+        /// <param name="hostName">The host name to bind the certificate to.</param>
+        /// <param name="certificate">The raw bytes of the certificate to bind.</param>
+        /// <param name="password">The certificate password.</param>
+        /// <returns>
+        /// A <see cref="Task{TResult}"/> representing the asynchronous operation to
+        /// update the TLS binding which returns the updated <see cref="IWebApp"/>.
+        /// </returns>
+        Task<IWebApp> UpdateBindingAsync(
+            IWebApp application,
+            string hostName,
+            byte[] certificate,
+            string password);
     }
 }
