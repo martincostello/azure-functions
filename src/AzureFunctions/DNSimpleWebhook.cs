@@ -1,8 +1,10 @@
 // Copyright (c) Martin Costello, 2018. All rights reserved.
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 
-using System;
 using System.Threading.Tasks;
+using MartinCostello.AzureFunctions.Blob;
+using MartinCostello.AzureFunctions.DNSimple;
+using MartinCostello.AzureFunctions.DNSimple.Client;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
@@ -29,16 +31,13 @@ namespace MartinCostello.AzureFunctions
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "webhooks/dnsimple")] HttpRequest request,
             ILogger logger)
         {
-            string certificatePassword = GetOption("CERTIFICATE_PASSWORD") ?? string.Empty;
-            string connectionString = GetOption("CERTIFICATE_STORE_CONNECTION") ?? "UseDevelopmentStorage=true";
-            string hostUrl = GetOption("DNSIMPLE_URL") ?? "https://api.dnsimple.com";
-            string token = GetOption("DNSIMPLE_TOKEN") ?? string.Empty;
+            var config = new FunctionsConfiguration();
 
-            var apiFactory = new DNSimple.Client.DNSimpleApiFactory(hostUrl, token);
-            var blobClient = new Blob.BlobClient(connectionString);
+            var apiFactory = new DNSimpleApiFactory(config.DNSimpleUrl, config.DNSimpleToken);
+            var blobClient = new BlobClient(config.CertificateStoreConnectionString);
 
-            var service = new DNSimple.DNSimpleService(
-                certificatePassword,
+            var service = new DNSimpleService(
+                config.CertificatePassword,
                 apiFactory,
                 blobClient,
                 logger);
@@ -50,7 +49,5 @@ namespace MartinCostello.AzureFunctions
                 StatusCode = result.StatusCode,
             };
         }
-
-        private static string GetOption(string name) => Environment.GetEnvironmentVariable(name, EnvironmentVariableTarget.Process);
     }
 }
