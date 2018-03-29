@@ -17,7 +17,7 @@ namespace MartinCostello.AzureFunctions
             var environment = new Dictionary<string, string>()
             {
                 { "AZURE_CREDENTIALS_FILE", "azure-creds.json" },
-                { "APPSERVICE_SUBSCRIPTION_ID", "my_subscription_id" },
+                { "AZURE_SUBSCRIPTION_ID", "my_subscription_id" },
                 { "CERTIFICATE_PASSWORD", "my_password" },
                 { "CERTIFICATE_STORE_CONNECTION", "UseDevelopmentStorage=true" },
                 { "DNSIMPLE_TOKEN", "my_token" },
