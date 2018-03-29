@@ -104,13 +104,13 @@ namespace MartinCostello.AzureFunctions.AppService
         {
             DateTime utcNow = _clock.GetCurrentInstant().ToDateTimeUtc();
 
-            if (certificate.NotBefore > utcNow)
+            if (certificate.NotBefore.ToUniversalTime() > utcNow)
             {
                 _logger.LogWarning("Cannot bind certificate with thumbprint {0} because it is not valid until {1:u}.", certificate.Thumbprint, certificate.NotBefore);
                 return false;
             }
 
-            if (certificate.NotAfter < utcNow)
+            if (certificate.NotAfter.ToUniversalTime() < utcNow)
             {
                 _logger.LogWarning("Cannot bind certificate with thumbprint {0} because it expired at {1:u}.", certificate.Thumbprint, certificate.NotAfter);
                 return false;
