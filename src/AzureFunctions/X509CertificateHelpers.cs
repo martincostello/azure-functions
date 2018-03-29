@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -115,11 +116,14 @@ namespace MartinCostello.AzureFunctions
             {
                 string[] alternateNames = subjectAlternateNames
                     .Format(multiLine: true)
-                    .Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
+                    .Split(new[] { "\r", "\n", "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
 
                 foreach (string rawName in alternateNames)
                 {
-                    string name = rawName.Replace("DNS Name=", string.Empty, StringComparison.Ordinal).ToLowerInvariant();
+                    string name = rawName
+                        .Split(new[] { '=', ':' })
+                        .LastOrDefault()
+                        .ToLowerInvariant();
 
                     if (!names.Contains(name))
                     {
