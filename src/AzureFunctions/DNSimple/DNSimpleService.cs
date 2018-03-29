@@ -256,7 +256,7 @@ namespace MartinCostello.AzureFunctions.DNSimple
             string safeCommonName = commonName.Replace(".", "-");
 
             string thumbprintLower = certificate.Thumbprint.ToLowerInvariant();
-            string timestamp = certificate.NotBefore.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+            string timestamp = certificate.NotBefore.ToUniversalTime().ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
 
             metadata["CommonName"] = commonName;
 
