@@ -14,7 +14,7 @@ namespace MartinCostello.AzureFunctions
         public string AzureCredentialsFile => GetOption("AZURE_CREDENTIALS_FILE");
 
         /// <inheritdoc />
-        public string AzureSubscriptionId => GetOption("APPSERVICE_SUBSCRIPTION_ID");
+        public string AzureSubscriptionId => GetOption("AZURE_SUBSCRIPTION_ID");
 
         /// <inheritdoc />
         public string CertificatePassword => GetOption("CERTIFICATE_PASSWORD");
@@ -28,7 +28,20 @@ namespace MartinCostello.AzureFunctions
         /// <inheritdoc />
         public string DNSimpleUrl => GetOption("DNSIMPLE_URL", "https://api.dnsimple.com");
 
-        public bool UseManagedServiceIdentity => string.Equals(GetOption("USE_MANAGED_SERVICE_IDENTITY", bool.TrueString), bool.TrueString, StringComparison.OrdinalIgnoreCase);
+        /// <inheritdoc />
+        public string ServicePrincipalClientId => GetOption("SERVICE_PRINCIPAL_CLIENT_ID");
+
+        /// <inheritdoc />
+        public string ServicePrincipalClientSecret => GetOption("SERVICE_PRINCIPAL_CLIENT_SECRET");
+
+        /// <inheritdoc />
+        public string ServicePrincipalTenantId => GetOption("SERVICE_PRINCIPAL_TENANT_ID");
+
+        /// <inheritdoc />
+        public bool UseManagedServiceIdentity => string.Equals(GetOption("USE_MANAGED_SERVICE_IDENTITY", bool.FalseString), bool.TrueString, StringComparison.OrdinalIgnoreCase);
+
+        /// <inheritdoc />
+        public bool UseServicePrincipalAuthentication => string.Equals(GetOption("USE_SERVICE_PRINCIPAL", bool.TrueString), bool.TrueString, StringComparison.OrdinalIgnoreCase);
 
         private static string GetOption(string name, string defaultValue = "") =>
             Environment.GetEnvironmentVariable(name, EnvironmentVariableTarget.Process) ?? defaultValue;

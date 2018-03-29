@@ -39,8 +39,28 @@ namespace MartinCostello.AzureFunctions
         string DNSimpleUrl { get; }
 
         /// <summary>
+        /// Gets the client Id to use when <see cref="UseServicePrincipalAuthentication"/> is <see langword="true"/>.
+        /// </summary>
+        string ServicePrincipalClientId { get; }
+
+        /// <summary>
+        /// Gets the client secret to use when <see cref="UseServicePrincipalAuthentication"/> is <see langword="true"/>.
+        /// </summary>
+        string ServicePrincipalClientSecret { get; }
+
+        /// <summary>
+        /// Gets the tenant Id to use when <see cref="UseServicePrincipalAuthentication"/> is <see langword="true"/>.
+        /// </summary>
+        string ServicePrincipalTenantId { get; }
+
+        /// <summary>
         /// Gets a value indicating whether to use a Managed Service Identity for accessing Azure resources.
         /// </summary>
         bool UseManagedServiceIdentity { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether to use a Service Principal for accessing Azure resources.
+        /// </summary>
+        bool UseServicePrincipalAuthentication { get; }
     }
 }
