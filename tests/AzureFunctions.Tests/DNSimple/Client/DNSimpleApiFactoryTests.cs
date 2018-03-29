@@ -10,6 +10,22 @@ namespace MartinCostello.AzureFunctions.DNSimple.Client
 {
     public static class DNSimpleApiFactoryTests
     {
+        [Fact]
+        public static void Can_Create_IDNSimpleApi_Instance()
+        {
+            // Arrange
+            string hostUrl = "https://api.dnsimple.com";
+            string token = "not_a_real_token";
+
+            IDNSimpleApiFactory factory = new DNSimpleApiFactory(hostUrl, token);
+
+            // Act
+            IDNSimpleApi actual = factory.Create();
+
+            // Assert
+            actual.ShouldNotBeNull();
+        }
+
         [Theory(Skip = "Requires an API token.")]
         [InlineData("https://api.dnsimple.com", "")]
         [InlineData("https://api.sandbox.dnsimple.com", "")]

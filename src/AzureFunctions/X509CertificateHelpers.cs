@@ -5,11 +5,12 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
-namespace MartinCostello.AzureFunctions.DNSimple
+namespace MartinCostello.AzureFunctions
 {
     /// <summary>
     /// A class containing helper methods for working with X.509 certificates.
@@ -96,6 +97,42 @@ namespace MartinCostello.AzureFunctions.DNSimple
                 { "Thumbprint", certificate.Thumbprint },
                 { "Version", certificate.Version.ToString(CultureInfo.InstalledUICulture) },
             };
+        }
+
+        /// <summary>
+        /// Gets the Subject Alternate Name values from the specified X.509 certificate.
+        /// </summary>
+        /// <param name="certificate">The certificate to extract the Subject Alternate Names from.</param>
+        /// <returns>
+        /// An <see cref="ICollection{T}"/> containing the Subject Alternate Names associated with <paramref name="certificate"/>, if any.
+        /// </returns>
+        internal static ICollection<string> GetSubjectAlternateNames(X509Certificate2 certificate)
+        {
+            var names = new List<string>();
+
+            var subjectAlternateNames = certificate.Extensions["2.5.29.17"];
+
+            if (subjectAlternateNames != null)
+            {
+                string[] alternateNames = subjectAlternateNames
+                    .Format(multiLine: true)
+                    .Split(new[] { "\r", "\n", "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+                foreach (string rawName in alternateNames)
+                {
+                    string name = rawName
+                        .Split(new[] { '=', ':' })
+                        .LastOrDefault()
+                        .ToLowerInvariant();
+
+                    if (!names.Contains(name))
+                    {
+                        names.Add(name);
+                    }
+                }
+            }
+
+            return names;
         }
 
         private static RSAParameters GetRSAParameters(byte[] privateKeyBytes)
