@@ -32,6 +32,10 @@ A repository containing my custom Azure Functions.
 | `AZURE_SUBSCRIPTION_ID` | _None_ | _TODO_ |
 | `CERTIFICATE_PASSWORD` | _None_ | _TODO_ |
 | `CERTIFICATE_STORE_CONNECTION` | _None_ | _TODO_ |
+| `SERVICE_PRINCIPAL_CLIENT_ID` | _None_ | _TODO_ |
+| `SERVICE_PRINCIPAL_CLIENT_SECRET` | _None_ | _TODO_ |
+| `SERVICE_PRINCIPAL_TENANT_ID` | _None_ | _TODO_ |
 | `USE_MANAGED_SERVICE_IDENTITY` | `false` | _TODO_ |
+| `USE_SERVICE_PRINCIPAL` | `true` | _TODO_ |
 
 You must also set `WEBSITE_LOAD_CERTIFICATES` to `*` in the function's Application settings in the Azure portal so that the private keys for X.509 certificates can be loaded.

@@ -69,34 +69,26 @@ namespace MartinCostello.AzureFunctions.AppService.Client
         }
 
         /// <summary>
-        /// Creates an authenticated instance of <see cref="IAzure"/>.
-        /// </summary>
-        /// <returns>
-        /// The instance of <see cref="IAzure"/> to use.
-        /// </returns>
-        protected virtual IAzure CreateService()
-        {
-            AzureCredentials credentials = CreateCredentials();
-
-            return Azure
-                .Configure()
-                .Authenticate(credentials)
-                .WithSubscription(_config.AzureSubscriptionId);
-        }
-
-        /// <summary>
         /// Creates a set of credentials to use for Azure service management.
         /// </summary>
         /// <returns>
         /// The instance of <see cref="AzureCredentials"/> to use.
         /// </returns>
-        protected virtual AzureCredentials CreateCredentials()
+        public AzureCredentials CreateCredentials()
         {
             var environment = AzureEnvironment.AzureGlobalCloud;
 
             if (_config.UseManagedServiceIdentity)
             {
                 return _credentialsFactory.FromMSI(new MSILoginInformation(MSIResourceType.AppService), environment);
+            }
+            else if (_config.UseServicePrincipalAuthentication)
+            {
+                return _credentialsFactory.FromServicePrincipal(
+                    _config.ServicePrincipalClientId,
+                    _config.ServicePrincipalClientSecret,
+                    _config.ServicePrincipalTenantId,
+                    environment);
             }
             else
             {
@@ -112,6 +104,22 @@ namespace MartinCostello.AzureFunctions.AppService.Client
 
                 return _credentialsFactory.FromFile(authFile);
             }
+        }
+
+        /// <summary>
+        /// Creates an authenticated instance of <see cref="IAzure"/>.
+        /// </summary>
+        /// <returns>
+        /// The instance of <see cref="IAzure"/> to use.
+        /// </returns>
+        protected virtual IAzure CreateService()
+        {
+            AzureCredentials credentials = CreateCredentials();
+
+            return Azure
+                .Configure()
+                .Authenticate(credentials)
+                .WithSubscription(_config.AzureSubscriptionId);
         }
     }
 }

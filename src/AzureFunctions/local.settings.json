@@ -15,6 +15,7 @@
     "CERTIFICATE_STORE_CONNECTION": "UseDevelopmentStorage=true",
     "DNSIMPLE_URL": "https://api.sandbox.dnsimple.com",
     "DNSIMPLE_TOKEN": "",
-    "USE_MANAGED_SERVICE_IDENTITY": false
+    "USE_MANAGED_SERVICE_IDENTITY": false,
+    "USE_SERVICE_PRINCIPAL": false
   }
 }
