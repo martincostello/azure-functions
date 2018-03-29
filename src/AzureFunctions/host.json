@@ -1,5 +1,5 @@
 {
-  "functions": [ "DNSimpleWebhook", "UploadPrivateCertificate" ],
+  "functions": [ "BindPrivateCertificate", "DNSimpleWebhook" ],
   "functionTimeout": "00:01:00",
   "http": {
     "routePrefix": ""
