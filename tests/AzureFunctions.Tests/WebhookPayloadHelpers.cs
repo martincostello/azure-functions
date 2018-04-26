@@ -21,7 +21,7 @@ namespace MartinCostello.AzureFunctions
         {
             return new WebhookPayload()
             {
-                Name = "certificate.reissue",
+                Name = "certificate.issue",
                 ApiVersion = "v2",
                 RequestId = "abc123",
                 Account = new WebhookAccount()

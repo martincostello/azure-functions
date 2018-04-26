@@ -13,7 +13,7 @@ A repository containing my custom Azure Functions.
 
 ### DNSimpleWebhook
 
-A function that acts as a receiver for webhooks from the [DNSimple API](https://dnsimple.com/webhooks). Only `v2` of the API and the `certificate.reissue` payload are currently supported.
+A function that acts as a receiver for webhooks from the [DNSimple API](https://dnsimple.com/webhooks). Only `v2` of the API and the `certificate.issue` payload are currently supported.
 
 The function queries the DNSimple API for the associated certificate re-issue (such as for a [LetsEncrypt](https://letsencrypt.org/) TLS certificate) to obtain the certificate chain, public, and private keys, which are then uploaded as blobs to an Azure storage account container. A PFX file is also generated using the public and private key and uploaded to the same blob container.
 
