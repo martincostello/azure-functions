@@ -133,7 +133,7 @@ namespace MartinCostello.AzureFunctions.DNSimple
                 return false;
             }
 
-            if (!string.Equals(payload.Name, "certificate.reissue", StringComparison.Ordinal))
+            if (!string.Equals(payload.Name, "certificate.issue", StringComparison.Ordinal))
             {
                 _logger.LogInformation("DNSimple payload {Id} is of an unknown name: {Name}", payload.RequestId, payload.Name);
                 return false;
