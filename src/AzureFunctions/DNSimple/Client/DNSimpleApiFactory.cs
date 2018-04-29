@@ -18,7 +18,7 @@ namespace MartinCostello.AzureFunctions.DNSimple.Client
         /// <summary>
         /// The bearer token to authenticate with the API. This field is read-only.
         /// </summary>
-        private readonly string _token;
+        private readonly Task<string> _token;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DNSimpleApiFactory"/> class.
@@ -28,7 +28,7 @@ namespace MartinCostello.AzureFunctions.DNSimple.Client
         public DNSimpleApiFactory(string hostUrl, string token)
         {
             _hostUrl = hostUrl;
-            _token = token;
+            _token = Task.FromResult(token);
         }
 
         /// <inheritdoc />
@@ -36,12 +36,10 @@ namespace MartinCostello.AzureFunctions.DNSimple.Client
         {
             var settings = new Refit.RefitSettings()
             {
-                AuthorizationHeaderValueGetter = GetAuthorizationHeaderAsync,
+                AuthorizationHeaderValueGetter = () => _token,
             };
 
             return Refit.RestService.For<IDNSimpleApi>(_hostUrl, settings);
         }
-
-        private Task<string> GetAuthorizationHeaderAsync() => Task.FromResult(_token);
     }
 }
