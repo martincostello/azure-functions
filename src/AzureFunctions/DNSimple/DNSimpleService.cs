@@ -184,7 +184,8 @@ namespace MartinCostello.AzureFunctions.DNSimple
         /// </returns>
         private async Task<CertificateData> GetCertificateDataAsync(WebhookPayload payload)
         {
-            Certificate certificate = payload.Data.ToObject<Certificate>();
+            var payloadData = payload.Data.ToObject<Newtonsoft.Json.Linq.JObject>();
+            Certificate certificate = payloadData["certificate"].ToObject<Certificate>();
 
             int accountId = payload.Account.Id;
             int domainId = certificate.DomainId;
