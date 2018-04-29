@@ -127,27 +127,30 @@ namespace MartinCostello.AzureFunctions.DNSimple
 
         private static WebhookPayload CreatePayload()
         {
-            var certificate = new
+            var data = new
             {
-                id = 555,
-                domain_id = 456,
-                contact_id = 789,
-                name = string.Empty,
-                common_name = "martincostello.io",
-                years = 1,
-                csr = "-----BEGIN CERTIFICATE REQUEST-----\nVGhpcyBpcyBhIGZha2UgQ2VydGlmaWNhdGUgU2lnbmluZyBSZXF1ZXN0Lg==\n-----END CERTIFICATE REQUEST-----\n",
-                state = "issued",
-                auto_renew = true,
-                alternate_name = Array.Empty<string>(),
-                authority_identifier = "letsencrypt",
-                created_at = "2018-03-04T20:00:00Z",
-                updated_at = "2018-03-04T20:00:00Z",
-                expires_on = "2018-06-05",
+                certificate = new
+                {
+                    id = 555,
+                    csr = "-----BEGIN CERTIFICATE REQUEST-----\nVGhpcyBpcyBhIGZha2UgQ2VydGlmaWNhdGUgU2lnbmluZyBSZXF1ZXN0Lg==\n-----END CERTIFICATE REQUEST-----\n",
+                    name = "www",
+                    state = "issued",
+                    years = 1,
+                    domain_id = 456,
+                    auto_renew = true,
+                    contact_id = 789,
+                    created_at = "2018-03-04T20:00:00Z",
+                    expires_on = "2018-06-05",
+                    updated_at = "2018-03-04T20:00:00Z",
+                    common_name = "martincostello.io",
+                    alternate_names = Array.Empty<string>(),
+                    authority_identifier = "letsencrypt",
+                }
             };
 
             WebhookPayload payload = WebhookPayloadHelpers.CreateValidPayload();
 
-            payload.Data = Newtonsoft.Json.Linq.JObject.FromObject(certificate);
+            payload.Data = Newtonsoft.Json.Linq.JObject.FromObject(data);
 
             return payload;
         }
