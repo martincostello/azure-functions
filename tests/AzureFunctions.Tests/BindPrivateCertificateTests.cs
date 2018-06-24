@@ -46,13 +46,32 @@ namespace MartinCostello.AzureFunctions
         }
 
         [Fact(Skip = "For local testing of the function using the Storage Emulator.")]
-        public async Task BindPrivateCertificate_Can_Bind_Certificate()
+        public async Task BindPrivateCertificate_Can_Bind_Certificate_Local()
         {
             // Arrange
             string blobName = "CHANGE_ME";
+            var storageAccount = CloudStorageAccount.DevelopmentStorageAccount;
 
+            await BindPrivateCertificateAsync(blobName, storageAccount);
+        }
+
+        [Fact(Skip = "For local testing of the function using the real certificate store.")]
+        public async Task BindPrivateCertificate_Can_Bind_Certificate_Production()
+        {
+            // Arrange
+            string blobName = "CHANGE_ME";
+            string connectionString = "CHANGE_ME";
+
+            var storageAccount = CloudStorageAccount.Parse(connectionString);
+
+            await BindPrivateCertificateAsync(blobName, storageAccount);
+        }
+
+        private async Task BindPrivateCertificateAsync(string blobName, CloudStorageAccount storageAccount)
+        {
+            // Arrange
             var logger = new XunitLogger(_outputHelper);
-            var certificate = CloudStorageAccount.DevelopmentStorageAccount
+            var certificate = storageAccount
                 .CreateCloudBlobClient()
                 .GetContainerReference("certificates")
                 .GetBlockBlobReference(blobName);
@@ -67,6 +86,7 @@ namespace MartinCostello.AzureFunctions
                 Environment.SetEnvironmentVariable(pair.Key, pair.Value.Value<string>());
             }
 
+            // Act and Assert
             await BindPrivateCertificate.Run(certificate, logger);
         }
     }
