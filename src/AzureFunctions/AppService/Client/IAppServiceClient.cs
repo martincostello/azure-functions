@@ -25,6 +25,7 @@ namespace MartinCostello.AzureFunctions.AppService.Client
         /// </summary>
         /// <param name="application">The application to update the TLS binding for.</param>
         /// <param name="hostName">The host name to bind the certificate to.</param>
+        /// <param name="thumbprint">The thumbprint of the certificate.</param>
         /// <param name="certificate">The raw bytes of the certificate to bind.</param>
         /// <param name="password">The certificate password.</param>
         /// <returns>
@@ -34,6 +35,7 @@ namespace MartinCostello.AzureFunctions.AppService.Client
         Task<IWebApp> UpdateBindingAsync(
             IWebApp application,
             string hostName,
+            string thumbprint,
             byte[] certificate,
             string password);
     }

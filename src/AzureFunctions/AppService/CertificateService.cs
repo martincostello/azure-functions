@@ -203,6 +203,7 @@ namespace MartinCostello.AzureFunctions.AppService
                 await _client.UpdateBindingAsync(
                     application,
                     hostName,
+                    certificate.Thumbprint,
                     certificate.RawData,
                     certificate.Password);
 

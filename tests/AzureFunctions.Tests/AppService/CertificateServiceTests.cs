@@ -200,7 +200,7 @@ namespace MartinCostello.AzureFunctions.AppService
             mock.Setup((p) => p.GetApplicationsAsync())
                 .ReturnsAsync(applications ?? Array.Empty<IWebApp>());
 
-            mock.Setup((p) => p.UpdateBindingAsync(It.IsNotNull<IWebApp>(), It.IsNotNull<string>(), It.IsNotNull<byte[]>(), certificatePassword))
+            mock.Setup((p) => p.UpdateBindingAsync(It.IsNotNull<IWebApp>(), It.IsNotNull<string>(), It.IsNotNull<string>(), It.IsNotNull<byte[]>(), certificatePassword))
                 .ReturnsAsync(Mock.Of<IWebApp>());
 
             IAppServiceClient client = mock.Object;
