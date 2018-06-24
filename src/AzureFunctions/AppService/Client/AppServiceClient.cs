@@ -49,23 +49,26 @@ namespace MartinCostello.AzureFunctions.AppService.Client
         }
 
         /// <inheritdoc />
-        public Task<IWebApp> UpdateBindingAsync(
+        public async Task<IWebApp> UpdateBindingAsync(
             IWebApp application,
             string hostName,
+            string thumbprint,
             byte[] certificate,
             string password)
         {
             using (var certificateFile = new TemporaryCertificateFile(certificate))
             {
-                return application
-                    .Update()
-                    .DefineSslBinding()
-                        .ForHostname(hostName)
-                        .WithPfxCertificateToUpload(certificateFile.FileName, password)
-                        .WithSniBasedSsl()
-                        .Attach()
-                    .ApplyAsync();
+                // See https://github.com/Azure/azure-libraries-for-net/issues/56#issuecomment-335958896
+                await application.Manager.AppServiceCertificates
+                    .Define(string.Format("{0}##{1}#", thumbprint, application.Region.Name))
+                    .WithRegion(application.Region)
+                    .WithExistingResourceGroup(application.ResourceGroupName)
+                    .WithPfxFile(certificateFile.FileName)
+                    .WithPfxPassword(password)
+                    .CreateAsync();
             }
+
+            return await application.RefreshAsync();
         }
 
         /// <summary>
