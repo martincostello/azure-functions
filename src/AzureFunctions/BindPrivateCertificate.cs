@@ -46,7 +46,7 @@ namespace MartinCostello.AzureFunctions
             }
             catch (Exception ex)
             {
-                logger?.LogError(ex, "Failed to bind private certificate from Azure blob.");
+                logger?.LogError(ex, "Failed to bind private certificate {Certificate} from Azure blob.", certificate.Name);
                 throw;
             }
         }
