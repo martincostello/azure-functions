@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Description>Tests for AzureFunctions</Description>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
     <RootNamespace>MartinCostello.AzureFunctions</RootNamespace>
     <Summary>Tests for AzureFunctions</Summary>
     <TargetFrameworks>netcoreapp2.0</TargetFrameworks>
@@ -14,12 +15,12 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="JustEat.HttpClientInterception" Version="1.2.1" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.2" />
-    <PackageReference Include="Moq" Version="4.8.3" />
-    <PackageReference Include="NodaTime.Testing" Version="2.3.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0" />
+    <PackageReference Include="Moq" Version="4.10.0" />
+    <PackageReference Include="NodaTime.Testing" Version="2.4.0" />
     <PackageReference Include="Shouldly" Version="3.0.0" />
-    <PackageReference Include="xunit" Version="2.3.1" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
+    <PackageReference Include="xunit" Version="2.4.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />

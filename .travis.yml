@@ -3,6 +3,7 @@ dist: trusty
 
 os:
   - linux
+  - osx
 
 env:
   global:
@@ -12,6 +13,10 @@ env:
 branches:
   only:
     - master
+
+cache:
+  directories:
+    - /home/travis/.nuget/packages
 
 addons:
   apt:

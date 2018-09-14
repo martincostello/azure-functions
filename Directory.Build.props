@@ -2,31 +2,36 @@
   <ItemGroup>
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)stylecop.json" Link="stylecop.json" />
     <Compile Include="$(MSBuildThisFileDirectory)CommonAssemblyInfo.cs" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta-63127-02" PrivateAssets="All" />
     <PackageReference Include="OpenCover" Version="4.6.519" PrivateAssets="All" />
-    <PackageReference Include="ReportGenerator" Version="3.1.2" PrivateAssets="All" />
+    <PackageReference Include="ReportGenerator" Version="4.0.0-rc4" PrivateAssets="All" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.0.2" PrivateAssets="All" />
   </ItemGroup>
   <PropertyGroup>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     <Authors>Martin Costello</Authors>
-    <CodeAnalysisRuleSet>../../AzureFunctions.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)AzureFunctions.ruleset</CodeAnalysisRuleSet>
     <Company>https://github.com/martincostello/azure-functions</Company>
     <Copyright>Martin Costello (c) $([System.DateTime]::UtcNow.ToString(yyyy))</Copyright>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <GenerateGitMetadata Condition=" ('$(CI)' != '' or '$(TF_BUILD)' != '') and '$(GenerateGitMetadata)' == '' ">true</GenerateGitMetadata>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
     <LangVersion>latest</LangVersion>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <NoWarn>CS1591;NU1701</NoWarn>
-    <PackageIconUrl>https://martincostello.com/favicon.ico</PackageIconUrl>
+    <NoWarn>$(NoWarn)</NoWarn>
+    <PackageIconUrl>https://cdn.martincostello.com/favicon.ico</PackageIconUrl>
     <PackageProjectUrl>https://github.com/martincostello/azure-functions</PackageProjectUrl>
     <PackageLicenseUrl>$(PackageProjectUrl)/blob/master/LICENSE</PackageLicenseUrl>
-    <PackageReleaseNotes>$(PackageProjectUrl)/releases</PackageReleaseNotes>
+    <PackageReleaseNotes>See $(PackageProjectUrl)/releases for details.</PackageReleaseNotes>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageTags></PackageTags>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>$(PackageProjectUrl).git</RepositoryUrl>
-    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <VersionPrefix>1.0.0</VersionPrefix>
     <VersionSuffix></VersionSuffix>
   </PropertyGroup>
