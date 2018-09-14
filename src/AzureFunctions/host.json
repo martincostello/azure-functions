@@ -1,8 +1,8 @@
 {
+  "version": "2.0",
   "functions": [ "BindPrivateCertificate", "DNSimpleWebhook" ],
   "functionTimeout": "00:01:00",
   "http": {
     "routePrefix": ""
-  },
-  "id": "253954204a0b41b3b38daf848475b448"
+  }
 }
