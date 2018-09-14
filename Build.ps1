@@ -10,7 +10,7 @@ $ErrorActionPreference = "Stop"
 
 $solutionPath = Split-Path $MyInvocation.MyCommand.Definition
 $solutionFile = Join-Path $solutionPath "AzureFunctions.sln"
-$sdkFile      = Join-Path $solutionPath "global.json"
+$sdkFile = Join-Path $solutionPath "global.json"
 
 $dotnetVersion = (Get-Content $sdkFile | ConvertFrom-Json).sdk.version
 
@@ -20,7 +20,7 @@ if ($OutputPath -eq "") {
 
 $installDotNetSdk = $false;
 
-if (((Get-Command "dotnet.exe" -ErrorAction SilentlyContinue) -eq $null) -and ((Get-Command "dotnet" -ErrorAction SilentlyContinue) -eq $null)) {
+if (($null -eq (Get-Command "dotnet.exe" -ErrorAction SilentlyContinue)) -and ($null -eq (Get-Command "dotnet" -ErrorAction SilentlyContinue))) {
     Write-Host "The .NET Core SDK is not installed."
     $installDotNetSdk = $true
 }
@@ -38,7 +38,7 @@ if ($installDotNetSdk -eq $true) {
     if (!(Test-Path $env:DOTNET_INSTALL_DIR)) {
         mkdir $env:DOTNET_INSTALL_DIR | Out-Null
         $installScript = Join-Path $env:DOTNET_INSTALL_DIR "install.ps1"
-        Invoke-WebRequest "https://raw.githubusercontent.com/dotnet/cli/v$dotnetVersion/scripts/obtain/dotnet-install.ps1" -OutFile $installScript -UseBasicParsing
+        Invoke-WebRequest "https://dot.net/v1/dotnet-install.ps1" -OutFile $installScript -UseBasicParsing
         & $installScript -Version "$dotnetVersion" -InstallDir "$env:DOTNET_INSTALL_DIR" -NoPath
     }
 
