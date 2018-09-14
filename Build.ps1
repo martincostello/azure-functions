@@ -12,7 +12,7 @@ $solutionPath = Split-Path $MyInvocation.MyCommand.Definition
 $solutionFile = Join-Path $solutionPath "AzureFunctions.sln"
 $sdkFile = Join-Path $solutionPath "global.json"
 
-$dotnetVersion = (Get-Content $sdkFile | ConvertFrom-Json).sdk.version
+$dotnetVersion = (Get-Content $sdkFile | Out-String | ConvertFrom-Json).sdk.version
 
 if ($OutputPath -eq "") {
     $OutputPath = Join-Path "$(Convert-Path "$PSScriptRoot")" "artifacts"
@@ -25,18 +25,27 @@ if (($null -eq (Get-Command "dotnet.exe" -ErrorAction SilentlyContinue)) -and ($
     $installDotNetSdk = $true
 }
 else {
-    $installedDotNetVersion = (dotnet --version | Out-String).Trim()
+    Try {
+        $installedDotNetVersion = (dotnet --version 2>&1 | Out-String).Trim()
+    }
+    Catch {
+        $installedDotNetVersion = "?"
+    }
+
     if ($installedDotNetVersion -ne $dotnetVersion) {
-        Write-Host "The required version of the .NET Core SDK is not installed. Expected $dotnetVersion but $installedDotNetVersion was found."
+        Write-Host "The required version of the .NET Core SDK is not installed. Expected $dotnetVersion."
         $installDotNetSdk = $true
     }
 }
 
 if ($installDotNetSdk -eq $true) {
     $env:DOTNET_INSTALL_DIR = Join-Path "$(Convert-Path "$PSScriptRoot")" ".dotnetcli"
+    $sdkPath = Join-Path $env:DOTNET_INSTALL_DIR "sdk\$dotnetVersion"
 
-    if (!(Test-Path $env:DOTNET_INSTALL_DIR)) {
-        mkdir $env:DOTNET_INSTALL_DIR | Out-Null
+    if (!(Test-Path $sdkPath)) {
+        if (!(Test-Path $env:DOTNET_INSTALL_DIR)) {
+            mkdir $env:DOTNET_INSTALL_DIR | Out-Null
+        }
         $installScript = Join-Path $env:DOTNET_INSTALL_DIR "install.ps1"
         Invoke-WebRequest "https://dot.net/v1/dotnet-install.ps1" -OutFile $installScript -UseBasicParsing
         & $installScript -Version "$dotnetVersion" -InstallDir "$env:DOTNET_INSTALL_DIR" -NoPath
@@ -67,7 +76,12 @@ function DotNetTest {
     param([string]$Project)
 
     if ($DisableCodeCoverage -eq $true) {
-        & $dotnet test $Project --output $OutputPath --no-build
+        if ($null -ne $env:TF_BUILD) {
+            & $dotnet test $Project --output $OutputPath --no-build --logger trx
+        }
+        else {
+            & $dotnet test $Project --output $OutputPath --no-build
+        }
     }
     else {
 
@@ -83,34 +97,53 @@ function DotNetTest {
         $openCoverVersion = "4.6.519"
         $openCoverPath = Join-Path $nugetPath "OpenCover\$openCoverVersion\tools\OpenCover.Console.exe"
 
-        $reportGeneratorVersion = "3.1.2"
-        $reportGeneratorPath = Join-Path $nugetPath "ReportGenerator\$reportGeneratorVersion\tools\ReportGenerator.exe"
+        $reportGeneratorVersion = "4.0.0-rc4"
+        $reportGeneratorPath = Join-Path $nugetPath "ReportGenerator\$reportGeneratorVersion\tools\netcoreapp2.0\ReportGenerator.dll"
 
         $coverageOutput = Join-Path $OutputPath "code-coverage.xml"
         $reportOutput = Join-Path $OutputPath "coverage"
 
-        & $openCoverPath `
-            `"-target:$dotnetPath`" `
-            `"-targetargs:test $Project --no-build --output $OutputPath`" `
-            -output:$coverageOutput `
-            -excludebyattribute:*.ExcludeFromCodeCoverage* `
-            -hideskipped:All `
-            -mergebyhash `
-            -oldstyle `
-            -register:user `
-            -skipautoprops `
-            `"-filter:+[AzureFunctions]* -[AzureFunctions.Tests]*`"
-
-        if ($LASTEXITCODE -eq 0) {
-            & $reportGeneratorPath `
-                `"-reports:$coverageOutput`" `
-                `"-targetdir:$reportOutput`" `
-                -verbosity:Warning
+        if ($null -ne $env:TF_BUILD) {
+            & $openCoverPath `
+                `"-target:$dotnetPath`" `
+                `"-targetargs:test $Project --no-build --output $OutputPath --logger trx`" `
+                -output:$coverageOutput `
+                `"-excludebyattribute:System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage*`" `
+                -hideskipped:All `
+                -mergebyhash `
+                -mergeoutput `
+                -oldstyle `
+                -register:user `
+                -skipautoprops `
+                `"-filter:+[AzureFunctions]* -[AzureFunctions.Tests]*`"
         }
+        else {
+            & $openCoverPath `
+                `"-target:$dotnetPath`" `
+                `"-targetargs:test $Project --no-build --output $OutputPath`" `
+                -output:$coverageOutput `
+                `"-excludebyattribute:System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage*`" `
+                -hideskipped:All `
+                -mergebyhash `
+                -mergeoutput `
+                -oldstyle `
+                -register:user `
+                -skipautoprops `
+                `"-filter:+[AzureFunctions]* -[AzureFunctions.Tests]*`"
+        }
+
+        $dotNetTestExitCode = $LASTEXITCODE
+
+        & $dotnet `
+            $reportGeneratorPath `
+            `"-reports:$coverageOutput`" `
+            `"-targetdir:$reportOutput`" `
+            -reporttypes:HTML`;Cobertura `
+            -verbosity:Warning
     }
 
-    if ($LASTEXITCODE -ne 0) {
-        throw "dotnet test failed with exit code $LASTEXITCODE"
+    if ($dotNetTestExitCode -ne 0) {
+        throw "dotnet test failed with exit code $dotNetTestExitCode"
     }
 }
 
