@@ -1,4 +1,4 @@
-// Copyright (c) Martin Costello, 2018. All rights reserved.
+﻿// Copyright (c) Martin Costello, 2018. All rights reserved.
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 
 using System;
@@ -27,7 +27,7 @@ namespace MartinCostello.AzureFunctions
         public async Task BindPrivateCertificate_Does_Not_Throw_If_Certificate_Is_Null()
         {
             // Arrange
-            ILogger logger = new XunitLogger(_outputHelper);
+            ILogger logger = _outputHelper.ToLogger<BindPrivateCertificateTests>();
             ICloudBlob certificate = null;
 
             // Act
@@ -38,7 +38,7 @@ namespace MartinCostello.AzureFunctions
         public async Task BindPrivateCertificate_Does_Not_Throw_If_Certificate_Is_Invalid()
         {
             // Arrange
-            ILogger logger = new XunitLogger(_outputHelper);
+            ILogger logger = _outputHelper.ToLogger<BindPrivateCertificateTests>();
             ICloudBlob certificate = Mock.Of<ICloudBlob>();
 
             // Act
@@ -70,7 +70,7 @@ namespace MartinCostello.AzureFunctions
         private async Task BindPrivateCertificateAsync(string blobName, CloudStorageAccount storageAccount)
         {
             // Arrange
-            var logger = new XunitLogger(_outputHelper);
+            var logger = _outputHelper.ToLogger<BindPrivateCertificateTests>();
             var certificate = storageAccount
                 .CreateCloudBlobClient()
                 .GetContainerReference("certificates")

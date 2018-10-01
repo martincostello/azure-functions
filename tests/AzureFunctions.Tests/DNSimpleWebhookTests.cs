@@ -1,4 +1,4 @@
-// Copyright (c) Martin Costello, 2018. All rights reserved.
+﻿// Copyright (c) Martin Costello, 2018. All rights reserved.
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 
 using System.Threading.Tasks;
@@ -97,7 +97,7 @@ namespace MartinCostello.AzureFunctions
 
         private async Task<IActionResult> InvokeAsync(object payload)
         {
-            ILogger logger = new XunitLogger(_outputHelper);
+            ILogger logger = _outputHelper.ToLogger<DNSimpleWebhookTests>();
             HttpRequest request = new MockHttpRequest(payload);
 
             return await DNSimpleWebhook.Run(request, logger);
