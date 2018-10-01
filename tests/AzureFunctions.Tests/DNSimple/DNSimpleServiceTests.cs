@@ -1,4 +1,4 @@
-// Copyright (c) Martin Costello, 2018. All rights reserved.
+﻿// Copyright (c) Martin Costello, 2018. All rights reserved.
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 
 using System;
@@ -36,7 +36,7 @@ namespace MartinCostello.AzureFunctions.DNSimple
             string certificatePassword = Guid.NewGuid().ToString();
             IDNSimpleApiFactory apiFactory = CreateDNSimpleApiFactory();
             IBlobClient blobClient = CreateBlobClient();
-            ILogger logger = new XunitLogger(_outputHelper);
+            ILogger logger = _outputHelper.ToLogger<DNSimpleServiceTests>();
 
             var service = new DNSimpleService(certificatePassword, apiFactory, blobClient, logger);
             var request = new MockHttpRequest(payload);
