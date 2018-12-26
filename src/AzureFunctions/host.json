@@ -1,6 +1,6 @@
 {
   "version": "2.0",
-  "functions": [ "BindPrivateCertificate", "DNSimpleWebhook" ],
+  "functions": [],
   "functionTimeout": "00:01:00",
   "http": {
     "routePrefix": ""
