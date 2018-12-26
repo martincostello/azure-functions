@@ -15,6 +15,7 @@
     "CERTIFICATE_STORE_CONNECTION": "UseDevelopmentStorage=true",
     "DNSIMPLE_URL": "https://api.sandbox.dnsimple.com",
     "DNSIMPLE_TOKEN": "",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet",
     "SERVICE_PRINCIPAL_CLIENT_ID": "",
     "SERVICE_PRINCIPAL_CLIENT_SECRET": "",
     "SERVICE_PRINCIPAL_TENANT_ID": "",
