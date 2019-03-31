@@ -102,7 +102,7 @@ namespace MartinCostello.AzureFunctions.AppService
         {
             // Arrange
             string previousThumprint = "old_thumbprint";
-            string currentThumbprint = "9309EC249BC2F5AEAF6233251A7B8FA4A43A958B";
+            string currentThumbprint = "8bc2d71c7c4b1169f143eab75f6b1ee7b8a33627";
 
             IHostNameBinding binding1 = CreateBinding("site.local", thumbprint: previousThumprint);
             IHostNameBinding binding2 = CreateBinding("martincostello.io", thumbprint: previousThumprint);
