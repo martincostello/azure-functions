@@ -123,7 +123,7 @@ namespace MartinCostello.AzureFunctions.DNSimple
         /// </summary>
         /// <param name="payload">The webhook payload.</param>
         /// <returns>
-        /// <see langword="true"/> if the payload can be handled; otherwise <see langword="false"/>
+        /// <see langword="true"/> if the payload can be handled; otherwise <see langword="false"/>.
         /// </returns>
         private bool CanHandlePayload(WebhookPayload payload)
         {
