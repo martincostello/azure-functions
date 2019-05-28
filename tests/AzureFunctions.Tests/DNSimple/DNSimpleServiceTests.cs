@@ -79,15 +79,15 @@ namespace MartinCostello.AzureFunctions.DNSimple
                     server = publicCertificate,
                     root = null as string,
                     chain = new[] { publicCertificate },
-                }
+                },
             };
 
             var privateKey = new
             {
                 data = new
                 {
-                    private_key = privateCertificate
-                }
+                    private_key = privateCertificate,
+                },
             };
 
             var options = new HttpClientInterceptorOptions()
@@ -145,7 +145,7 @@ namespace MartinCostello.AzureFunctions.DNSimple
                     common_name = "martincostello.io",
                     alternate_names = Array.Empty<string>(),
                     authority_identifier = "letsencrypt",
-                }
+                },
             };
 
             WebhookPayload payload = WebhookPayloadHelpers.CreateValidPayload();
