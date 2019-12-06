@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <AssemblyTitle>AzureFunctions</AssemblyTitle>
-    <AzureFunctionsVersion>v2</AzureFunctionsVersion>
+    <AzureFunctionsVersion>v3</AzureFunctionsVersion>
     <DebugType>full</DebugType>
     <Description>Custom Azure Functions.</Description>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Summary>Custom Azure Functions.</Summary>
     <RootNamespace>MartinCostello.AzureFunctions</RootNamespace>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseNETCoreGenerator>true</UseNETCoreGenerator>
   </PropertyGroup>
   <ItemGroup>
@@ -16,7 +16,7 @@
     <PackageReference Include="Microsoft.Azure.Management.Fluent" Version="$(MicrosoftAzureManagementFluentVersion)" />
     <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.Storage" Version="3.0.10" />
     <PackageReference Include="NodaTime" Version="2.4.7" />
-    <PackageReference Include="Refit" Version="4.6.58" />
+    <PackageReference Include="Refit" Version="5.0.23" />
   </ItemGroup>
   <ItemGroup>
     <None Update="host.json" CopyToOutputDirectory="PreserveNewest" />
