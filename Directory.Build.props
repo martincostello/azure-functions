@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <MicrosoftAzureManagementFluentVersion>1.30.0</MicrosoftAzureManagementFluentVersion>
+    <MicrosoftAzureManagementFluentVersion>1.31.0</MicrosoftAzureManagementFluentVersion>
   </PropertyGroup>
   <ItemGroup>
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)stylecop.json" Link="stylecop.json" />
