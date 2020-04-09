@@ -16,7 +16,7 @@
     <PackageReference Include="Microsoft.Azure.Management.Fluent" Version="$(MicrosoftAzureManagementFluentVersion)" />
     <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.Storage" Version="3.0.10" />
     <PackageReference Include="NodaTime" Version="2.4.7" />
-    <PackageReference Include="Refit" Version="5.1.54" />
+    <PackageReference Include="Refit" Version="5.1.67" />
   </ItemGroup>
   <ItemGroup>
     <None Update="host.json" CopyToOutputDirectory="PreserveNewest" />
