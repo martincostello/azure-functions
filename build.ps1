@@ -64,7 +64,7 @@ if ($installDotNetSdk -eq $true) {
         else {
             $installScript = Join-Path $env:DOTNET_INSTALL_DIR "install.ps1"
             Invoke-WebRequest "https://dot.net/v1/dotnet-install.ps1" -OutFile $installScript -UseBasicParsing
-            & $installScript -Version "$dotnetVersion" -InstallDir "$env:DOTNET_INSTALL_DIR" -NoPath
+            & $installScript -Version "$dotnetVersion" -InstallDir "$env:DOTNET_INSTALL_DIR"
         }
     }
 }
