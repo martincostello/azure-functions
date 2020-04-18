@@ -2,7 +2,6 @@
   <PropertyGroup>
     <AssemblyTitle>AzureFunctions</AssemblyTitle>
     <AzureFunctionsVersion>v3</AzureFunctionsVersion>
-    <DebugType>full</DebugType>
     <Description>Custom Azure Functions.</Description>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Summary>Custom Azure Functions.</Summary>
