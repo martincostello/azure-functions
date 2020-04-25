@@ -107,7 +107,7 @@ function DotNetTest {
         & $dotnet test $Project --output $OutputPath --logger trx
     }
     else {
-        & $dotnet test $Project --output $OutputPath
+        & $dotnet test $Project --output $OutputPath -- RunConfiguration.TargetPlatform=x64
     }
 
     $dotNetTestExitCode = $LASTEXITCODE
