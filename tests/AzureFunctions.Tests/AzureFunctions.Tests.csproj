@@ -17,7 +17,7 @@
     <PackageReference Include="JustEat.HttpClientInterception" Version="3.0.0" />
     <PackageReference Include="MartinCostello.Logging.XUnit" Version="0.1.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
-    <PackageReference Include="Moq" Version="4.13.1" />
+    <PackageReference Include="Moq" Version="4.14.0" />
     <PackageReference Include="NodaTime.Testing" Version="2.4.8" />
     <PackageReference Include="Shouldly" Version="3.0.2" />
     <PackageReference Include="xunit" Version="2.4.1" />
