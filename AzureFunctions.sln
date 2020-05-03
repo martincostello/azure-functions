@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2036
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureFunctions", "src\AzureFunctions\AzureFunctions.csproj", "{7FFC997F-CFD1-459D-BB2B-A8F5EF938FA9}"
 EndProject
@@ -16,11 +16,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
-		.travis.yml = .travis.yml
-		appveyor.yml = appveyor.yml
 		AzureFunctions.ruleset = AzureFunctions.ruleset
-		Build.ps1 = Build.ps1
-		build.sh = build.sh
+		build.ps1 = build.ps1
 		CODE_OF_CONDUCT.md = CODE_OF_CONDUCT.md
 		CommonAssemblyInfo.cs = CommonAssemblyInfo.cs
 		Directory.Build.props = Directory.Build.props
@@ -43,6 +40,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".vscode", ".vscode", "{2C2B
 	ProjectSection(SolutionItems) = preProject
 		.vscode\launch.json = .vscode\launch.json
 		.vscode\tasks.json = .vscode\tasks.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{3A0BD3DA-FB13-4D47-BF4F-88273C5D1AFD}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\build.yml = .github\workflows\build.yml
+		.github\workflows\update-dotnet-sdk.yml = .github\workflows\update-dotnet-sdk.yml
 	EndProjectSection
 EndProject
 Global
@@ -68,6 +71,7 @@ Global
 		{7888A115-3473-4BBE-8955-E263AADC611C} = {37C847B2-8840-4771-B0A8-2EE98DDB9022}
 		{8234696E-DF1D-4359-9C2D-5445D01588C7} = {ECFE585A-7DC5-463D-A1B5-340383CC6228}
 		{2C2BECF8-7566-4915-A71A-96D4CDC59D1A} = {ECFE585A-7DC5-463D-A1B5-340383CC6228}
+		{3A0BD3DA-FB13-4D47-BF4F-88273C5D1AFD} = {8234696E-DF1D-4359-9C2D-5445D01588C7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EEDFC93E-B949-493C-A5F1-F22175F982C1}
