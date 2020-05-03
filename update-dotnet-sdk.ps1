@@ -1,13 +1,40 @@
 #! /usr/bin/pwsh
+<#
+.SYNOPSIS
+    Attempts to update the version of the .NET SDK used by the repository's global.json file.
+.DESCRIPTION
+    Attempts to update the version of the .NET SDK specified in a global.json file to the latest release of
+    the .NET SDK for a release channel of .NET, as specified by the https://github.com/dotnet/core repository.
+.PARAMETER Channel
+    Default: 3.1
+    The .NET release channel to download the SDK for (2.1, 3.1, 5.0, etc.).
+.PARAMETER BranchName
+    The optional Git branch name to use.
+.PARAMETER CommitMessage
+    The optional Git commit message to use.
+.PARAMETER GitHubToken
+    The optional GitHub token to use to create a pull request for any update.
+.PARAMETER GlobalJsonFile
+    Default: ./global.json
+    The optional path to the global.json file to update.
+.PARAMETER UserEmail
+    The optional email address to use for the Git commit.
+.PARAMETER UserName
+    The optional user name to use for the Git commit.
+.PARAMETER DryRun
+    If set, will not actually make changes to the file system, Git or GitHub.
+.PARAMETER Verbose
+    Displays additional diagnostics information.
+#>
+[CmdletBinding()]
 param(
-    [Parameter(Mandatory = $true)][string] $GitHubToken,
     [Parameter(Mandatory = $false)][string] $Channel = "3.1",
-    [Parameter(Mandatory = $false)][string] $GlobalJsonFile = "./global.json",
-    [Parameter(Mandatory = $false)][string] $UserName = "",
-    [Parameter(Mandatory = $false)][string] $UserEmail = "",
     [Parameter(Mandatory = $false)][string] $BranchName = "",
     [Parameter(Mandatory = $false)][string] $CommitMessage = "",
-    [Parameter(Mandatory = $false)][switch] $SkipCommit,
+    [Parameter(Mandatory = $false)][string] $GitHubToken = "",
+    [Parameter(Mandatory = $false)][string] $GlobalJsonFile = "./global.json",
+    [Parameter(Mandatory = $false)][string] $UserEmail = "",
+    [Parameter(Mandatory = $false)][string] $UserName = "",
     [Parameter(Mandatory = $false)][switch] $DryRun
 )
 
@@ -183,6 +210,7 @@ finally {
 
 $LatestSDKVersion = Get-Latest-SDK-Version $ReleaseNotesPath
 $LatestRuntimeVersion = Get-Latest-Runtime-Version $ReleaseNotesPath $LatestSDKVersion
+$CurrentRuntimeVersion = Get-Latest-Runtime-Version $ReleaseNotesPath $CurrentSDKVersion
 
 Say "Latest .NET SDK version for channel '$Channel' is $LatestSDKVersion (runtime version $LatestRuntimeVersion)"
 
@@ -214,11 +242,8 @@ if (-Not $CommitMessage) {
 
 Say-Verbose "Commit message: $CommitMessage"
 
-if ($DryRun) {
-    Say "Skipped git commit for SDK update on branch $BranchName"
-}
-else {
-
+# Set the remote for GitHub Actions to detect if the branch/PR has already been created
+if ($env:CI) {
     git remote set-url origin https://github.com/$env:GITHUB_REPOSITORY.git | Out-Null
 
     try {
@@ -227,35 +252,40 @@ else {
     catch {
         # HACK - It worked, ignore exit code 1
     }
+}
 
-    $Base = (git rev-parse --abbrev-ref HEAD | Out-String).Trim()
-    $BranchExists = (git rev-parse --verify --quiet remotes/origin/$BranchName | Out-String).Trim()
+$Base = (git rev-parse --abbrev-ref HEAD | Out-String).Trim()
+$BranchExists = (git rev-parse --verify --quiet remotes/origin/$BranchName | Out-String).Trim()
 
-    if ($BranchExists) {
-        Say "The $BranchName branch already exists"
-        return
+if ($BranchExists) {
+    Say "The $BranchName branch already exists"
+    return
+}
+
+if ($UserName) {
+    if ($DryRun) {
+        Say "Skipped update of git user name to '$UserName'"
     }
-
-    if ($UserName) {
-        if ($DryRun) {
-            Say "Skipped update of git user name to '$UserName'"
-        }
-        else {
-            git config user.name $UserName
-            Say "Updated git user name to '$UserName'"
-        }
+    else {
+        git config user.name $UserName
+        Say "Updated git user name to '$UserName'"
     }
+}
 
-    if ($UserEmail) {
-        if ($DryRun) {
-            Say "Skipped update of git user email to '$UserEmail'"
-        }
-        else {
-            git config user.email $UserEmail
-            Say "Updated git user email to '$UserEmail'"
-        }
+if ($UserEmail) {
+    if ($DryRun) {
+        Say "Skipped update of git user email to '$UserEmail'"
     }
+    else {
+        git config user.email $UserEmail
+        Say "Updated git user email to '$UserEmail'"
+    }
+}
 
+if ($DryRun) {
+    Say "Skipped git checkout for branch $BranchName"
+}
+else {
     try {
         git checkout -b $BranchName | Out-Null
     }
@@ -264,7 +294,12 @@ else {
     }
 
     Say-Verbose "Created git branch $BranchName"
+}
 
+if ($DryRun) {
+    Say "Skipped git commit for SDK update on branch $BranchName"
+}
+else {
     git add $GlobalJsonFile | Out-Null
     Say-Verbose "Staged git commit for '$GlobalJsonFile'"
 
@@ -272,15 +307,23 @@ else {
     $GitSha = (git log --format="%H" -n 1 | Out-String).Substring(0, 7)
 
     Say "Commited .NET SDK update to git ($GitSha)"
+}
 
-    try {
-        git push -u origin $BranchName | Out-Null
-    }
-    catch {
-        # HACK - It worked, ignore exit code 1
-    }
+if ($env:CI -And $GitHubToken) {
 
-    Say "Pushed changes to repository $env:GITHUB_REPOSITORY"
+    if ($DryRun) {
+        Say "Skipped git push to origin of branch $BranchName"
+    }
+    else {
+        try {
+            git push -u origin $BranchName | Out-Null
+        }
+        catch {
+            # HACK - It worked, ignore exit code 1
+        }
+
+        Say "Pushed changes to repository $env:GITHUB_REPOSITORY"
+    }
 
     $PullRequestUri = "https://api.github.com/repos/$env:GITHUB_REPOSITORY/pulls"
 
@@ -290,31 +333,47 @@ else {
         "User-Agent"    = "update-dotnet-sdk.ps1";
     }
 
+    $PullRequestBody = "Updates the .NET SDK to version [``$LatestSDKVersion``](https://github.com/dotnet/core/blob/master/release-notes/$Channel/$LatestRuntimeVersion/$LatestSDKVersion-download.md), "
+
+    if ($LatestRuntimeVersion -eq $CurrentRuntimeVersion) {
+        $PullRequestBody += "which includes version [``$LatestRuntimeVersion``](https://github.com/dotnet/core/blob/master/release-notes/$Channel/$LatestRuntimeVersion/$LatestRuntimeVersion.md) of the .NET runtime."
+    }
+    else {
+        $PullRequestBody += "which also updates the .NET runtime from version [``$CurrentRuntimeVersion``](https://github.com/dotnet/core/blob/master/release-notes/$Channel/$CurrentRuntimeVersion/$CurrentRuntimeVersion.md) to version [``$LatestRuntimeVersion``](https://github.com/dotnet/core/blob/master/release-notes/$Channel/$LatestRuntimeVersion/$LatestRuntimeVersion.md)."
+    }
+
+    $PullRequestBody += "`n`nThis pull request was auto-generated by [GitHub Actions](https://github.com/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID)."
+
     $Body = @{
         "title"                 = "Update .NET SDK to $LatestSDKVersion";
         "head"                  = $BranchName;
         "base"                  = $Base;
-        "body"                  = "Updates the .NET SDK to version [``$LatestSDKVersion``](https://github.com/dotnet/core/blob/master/release-notes/$Channel/$LatestRuntimeVersion/$LatestSDKVersion-download.md).`n`nThis pull request was auto-generated by [GitHub Actions](https://github.com/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID).";
+        "body"                  = $PullRequestBody;
         "maintainer_can_modify" = $true;
         "draft"                 = $false;
     } | ConvertTo-Json
 
     Say-Verbose "Pull Request: $Body"
 
-    try {
-        $PullRequest = Invoke-RestMethod `
-            -Uri $PullRequestUri `
-            -Method POST `
-            -ContentType "application/json" `
-            -Headers $Headers `
-            -Body $Body
+    if ($DryRun) {
+        Say "Skipped creating GitHub pull request for branch $BranchName to $Base"
     }
-    catch {
-        Say "Failed to open Pull Request"
-        $_.Exception | Get-Error
-        throw
-    }
+    else {
+        try {
+            $PullRequest = Invoke-RestMethod `
+                -Uri $PullRequestUri `
+                -Method POST `
+                -ContentType "application/json" `
+                -Headers $Headers `
+                -Body $Body
+        }
+        catch {
+            Say "Failed to open Pull Request"
+            $_.Exception | Get-Error
+            throw
+        }
 
-    Say "Created pull request #$($PullRequest.number): $($PullRequest.title)"
-    Say "View the pull request at $($PullRequest.html_url)"
+        Say "Created pull request #$($PullRequest.number): $($PullRequest.title)"
+        Say "View the pull request at $($PullRequest.html_url)"
+    }
 }
