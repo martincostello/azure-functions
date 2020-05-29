@@ -14,7 +14,7 @@
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="3.0.7" />
     <PackageReference Include="Microsoft.Azure.Management.AppService.Fluent" Version="$(MicrosoftAzureManagementFluentVersion)" />
     <PackageReference Include="Microsoft.Azure.Management.Fluent" Version="$(MicrosoftAzureManagementFluentVersion)" />
-    <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.Storage" Version="3.0.11" />
+    <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.Storage" Version="4.0.0" />
     <PackageReference Include="NodaTime" Version="3.0.0" />
     <PackageReference Include="Refit" Version="5.1.67" />
   </ItemGroup>
