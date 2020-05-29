@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using MartinCostello.AzureFunctions.AppService.Client;
 using Microsoft.Azure.Management.AppService.Fluent;
 using Microsoft.Azure.Management.AppService.Fluent.Models;
-using Microsoft.WindowsAzure.Storage.Blob;
+using Microsoft.Azure.Storage.Blob;
 using Moq;
 using NodaTime;
 using NodaTime.Testing;
