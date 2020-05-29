@@ -4,9 +4,9 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.Azure.Storage;
+using Microsoft.Azure.Storage.Blob;
 using Microsoft.Extensions.Logging;
-using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Blob;
 using Moq;
 using Newtonsoft.Json.Linq;
 using Xunit;

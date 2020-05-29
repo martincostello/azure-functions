@@ -8,8 +8,8 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using MartinCostello.AzureFunctions.AppService.Client;
 using Microsoft.Azure.Management.AppService.Fluent;
+using Microsoft.Azure.Storage.Blob;
 using Microsoft.Extensions.Logging;
-using Microsoft.WindowsAzure.Storage.Blob;
 using NodaTime;
 
 namespace MartinCostello.AzureFunctions.AppService

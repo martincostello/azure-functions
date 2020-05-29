@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using MartinCostello.AzureFunctions.AppService;
 using MartinCostello.AzureFunctions.AppService.Client;
 using Microsoft.Azure.Management.ResourceManager.Fluent;
+using Microsoft.Azure.Storage.Blob;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
-using Microsoft.WindowsAzure.Storage.Blob;
 using NodaTime;
 
 namespace MartinCostello.AzureFunctions
