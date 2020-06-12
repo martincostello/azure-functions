@@ -1,0 +1,12 @@
+version: 2
+updates:
+- package-ecosystem: nuget
+  directory: "/"
+  schedule:
+    interval: daily
+    timezone: Europe/London
+  open-pull-requests-limit: 99
+  ignore:
+  - dependency-name: Refit
+    versions:
+    - ">= 4.7.a, < 4.8"
