@@ -1,6 +1,6 @@
 # Azure Functions
 
-[![Build status](https://github.com/martincostello/azure-functions/workflows/build/badge.svg?branch=master&event=push)](https://github.com/martincostello/azure-functions/actions?query=workflow%3Abuild+branch%3Amaster+event%3Apush)
+[![Build status](https://github.com/martincostello/azure-functions/workflows/build/badge.svg?branch=main&event=push)](https://github.com/martincostello/azure-functions/actions?query=workflow%3Abuild+branch%3Amain+event%3Apush)
 
 ## Overview
 
