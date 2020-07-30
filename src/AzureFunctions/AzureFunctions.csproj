@@ -11,12 +11,12 @@
     <UseNETCoreGenerator>true</UseNETCoreGenerator>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="3.0.9" />
-    <PackageReference Include="Microsoft.Azure.Management.AppService.Fluent" Version="$(MicrosoftAzureManagementFluentVersion)" />
-    <PackageReference Include="Microsoft.Azure.Management.Fluent" Version="$(MicrosoftAzureManagementFluentVersion)" />
-    <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.Storage" Version="4.0.2" />
-    <PackageReference Include="NodaTime" Version="3.0.0" />
-    <PackageReference Include="Refit" Version="5.1.67" />
+    <PackageReference Include="Microsoft.NET.Sdk.Functions" />
+    <PackageReference Include="Microsoft.Azure.Management.AppService.Fluent" />
+    <PackageReference Include="Microsoft.Azure.Management.Fluent" />
+    <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.Storage" />
+    <PackageReference Include="NodaTime" />
+    <PackageReference Include="Refit" />
   </ItemGroup>
   <ItemGroup>
     <None Update="host.json" CopyToOutputDirectory="PreserveNewest" />

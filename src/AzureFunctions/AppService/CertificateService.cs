@@ -81,13 +81,13 @@ namespace MartinCostello.AzureFunctions.AppService
             _logger.LogInformation(
                 "Certificate with thumbprint {0} in blob {1} bound to {2:N0} App Service instance host name(s).",
                 data.Thumbprint,
-                certificate.Uri,
+                certificate?.Uri,
                 bindingsUpdated);
 
             return bindingsUpdated;
         }
 
-        private async Task<byte[]> GetCertificateAsync(ICloudBlob blob)
+        private static async Task<byte[]> GetCertificateAsync(ICloudBlob blob)
         {
             byte[] rawData;
 

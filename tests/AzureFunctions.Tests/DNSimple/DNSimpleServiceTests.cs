@@ -69,8 +69,8 @@ namespace MartinCostello.AzureFunctions.DNSimple
 
         private static IDNSimpleApiFactory CreateDNSimpleApiFactory()
         {
-            string publicCertificate = File.ReadAllText("self-signed.cer").Replace("\r\n", "\n");
-            string privateCertificate = File.ReadAllText("self-signed.key").Replace("\r\n", "\n");
+            string publicCertificate = File.ReadAllText("self-signed.cer").Replace("\r\n", "\n", StringComparison.Ordinal);
+            string privateCertificate = File.ReadAllText("self-signed.key").Replace("\r\n", "\n", StringComparison.Ordinal);
 
             var download = new
             {

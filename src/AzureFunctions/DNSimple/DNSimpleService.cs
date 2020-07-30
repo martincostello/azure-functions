@@ -254,7 +254,7 @@ namespace MartinCostello.AzureFunctions.DNSimple
             IDictionary<string, string> metadata = X509CertificateHelpers.GetMetadata(certificate);
 
             string commonName = certificate.Subject.Substring(3); // Remove "CN=" prefix
-            string safeCommonName = commonName.Replace(".", "-");
+            string safeCommonName = commonName.Replace(".", "-", StringComparison.Ordinal);
 
             string thumbprintLower = certificate.Thumbprint.ToLowerInvariant();
             string timestamp = certificate.NotBefore.ToUniversalTime().ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
