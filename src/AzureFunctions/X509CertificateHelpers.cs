@@ -48,13 +48,10 @@ namespace MartinCostello.AzureFunctions
 
                 try
                 {
-                    using (var privateKey = RSA.Create(parameters))
-                    {
-                        using (X509Certificate2 publicKey = CreateCertificate(publicKeyString))
-                        {
-                            return publicKey.CopyWithPrivateKey(privateKey);
-                        }
-                    }
+                    using var privateKey = RSA.Create(parameters);
+                    using X509Certificate2 publicKey = CreateCertificate(publicKeyString);
+
+                    return publicKey.CopyWithPrivateKey(privateKey);
                 }
                 finally
                 {
@@ -85,17 +82,17 @@ namespace MartinCostello.AzureFunctions
         {
             return new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
             {
-                { "FriendlyName", certificate.FriendlyName },
-                { "Issuer", certificate.Issuer },
-                { "IssuerName", certificate.IssuerName.Name },
-                { "NotAfter", certificate.NotAfter.ToString("u", CultureInfo.InstalledUICulture) },
-                { "NotBefore", certificate.NotBefore.ToString("u", CultureInfo.InstalledUICulture) },
-                { "SerialNumber", certificate.SerialNumber },
-                { "SignatureAlgorithm", certificate.SignatureAlgorithm.FriendlyName },
-                { "Subject", certificate.Subject },
-                { "SubjectName", certificate.SubjectName.Name },
-                { "Thumbprint", certificate.Thumbprint },
-                { "Version", certificate.Version.ToString(CultureInfo.InstalledUICulture) },
+                ["FriendlyName"] = certificate.FriendlyName,
+                ["Issuer"] = certificate.Issuer,
+                ["IssuerName"] = certificate.IssuerName.Name,
+                ["NotAfter"] = certificate.NotAfter.ToString("u", CultureInfo.InvariantCulture),
+                ["NotBefore"] = certificate.NotBefore.ToString("u", CultureInfo.InvariantCulture),
+                ["SerialNumber"] = certificate.SerialNumber,
+                ["SignatureAlgorithm"] = certificate.SignatureAlgorithm.FriendlyName,
+                ["Subject"] = certificate.Subject,
+                ["SubjectName"] = certificate.SubjectName.Name,
+                ["Thumbprint"] = certificate.Thumbprint,
+                ["Version"] = certificate.Version.ToString(CultureInfo.InvariantCulture),
             };
         }
 
@@ -139,53 +136,50 @@ namespace MartinCostello.AzureFunctions
         {
             RSAParameters parameters = new RSAParameters();
 
-            using (var stream = new MemoryStream(privateKeyBytes))
+            using var stream = new MemoryStream(privateKeyBytes);
+            using var reader = new BinaryReader(stream);
+
+            ushort format = reader.ReadUInt16();
+
+            if (format == 0x8130)
             {
-                using (var reader = new BinaryReader(stream))
-                {
-                    ushort format = reader.ReadUInt16();
-
-                    if (format == 0x8130)
-                    {
-                        reader.ReadByte();
-                    }
-                    else if (format == 0x8230)
-                    {
-                        reader.ReadInt16();
-                    }
-                    else
-                    {
-                        throw new InvalidOperationException("Invalid private key format.");
-                    }
-
-                    if (reader.ReadUInt16() != 0x0102)
-                    {
-                        throw new InvalidOperationException("Invalid private key version.");
-                    }
-
-                    if (reader.ReadByte() != 0x00)
-                    {
-                        throw new InvalidOperationException("Invalid private key padding.");
-                    }
-
-                    byte[] ReadParameter()
-                    {
-                        int length = GetLength(reader);
-                        return reader.ReadBytes(length);
-                    }
-
-                    parameters.Modulus = ReadParameter();
-                    parameters.Exponent = ReadParameter();
-                    parameters.D = ReadParameter();
-                    parameters.P = ReadParameter();
-                    parameters.Q = ReadParameter();
-                    parameters.DP = ReadParameter();
-                    parameters.DQ = ReadParameter();
-                    parameters.InverseQ = ReadParameter();
-
-                    return parameters;
-                }
+                reader.ReadByte();
             }
+            else if (format == 0x8230)
+            {
+                reader.ReadInt16();
+            }
+            else
+            {
+                throw new InvalidOperationException("Invalid private key format.");
+            }
+
+            if (reader.ReadUInt16() != 0x0102)
+            {
+                throw new InvalidOperationException("Invalid private key version.");
+            }
+
+            if (reader.ReadByte() != 0x00)
+            {
+                throw new InvalidOperationException("Invalid private key padding.");
+            }
+
+            byte[] ReadParameter()
+            {
+                int length = GetLength(reader);
+                return reader.ReadBytes(length);
+            }
+
+            parameters.Modulus = ReadParameter();
+            parameters.Exponent = ReadParameter();
+            parameters.D = ReadParameter();
+            parameters.P = ReadParameter();
+            parameters.Q = ReadParameter();
+            parameters.DP = ReadParameter();
+            parameters.DQ = ReadParameter();
+            parameters.InverseQ = ReadParameter();
+
+            return parameters;
         }
 
         private static byte[] DecodePem(string privateKey)
@@ -193,10 +187,10 @@ namespace MartinCostello.AzureFunctions
             const string Header = "-----BEGIN RSA PRIVATE KEY-----\n";
             const string Footer = "-----END RSA PRIVATE KEY-----";
 
-            int startIndex = privateKey.IndexOf(Header) + Header.Length;
-            int endIndex = privateKey.IndexOf(Footer, startIndex);
+            int startIndex = privateKey.IndexOf(Header, StringComparison.Ordinal) + Header.Length;
+            int endIndex = privateKey.IndexOf(Footer, startIndex, StringComparison.Ordinal);
 
-            string base64 = privateKey.Substring(startIndex, endIndex - startIndex);
+            string base64 = privateKey[startIndex..endIndex];
 
             return Convert.FromBase64String(base64);
         }

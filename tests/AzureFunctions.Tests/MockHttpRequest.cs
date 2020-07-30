@@ -10,7 +10,9 @@ using Newtonsoft.Json;
 
 namespace MartinCostello.AzureFunctions
 {
+#pragma warning disable CA1001
     internal sealed class MockHttpRequest : DefaultHttpRequest
+#pragma warning restore CA1001
     {
         private readonly MemoryStream _stream;
 

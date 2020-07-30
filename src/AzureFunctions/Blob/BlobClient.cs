@@ -1,9 +1,11 @@
 // Copyright (c) Martin Costello, 2018. All rights reserved.
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Azure.Management.Sql.Fluent.Models;
 using Microsoft.Azure.Storage;
 using Microsoft.Azure.Storage.Blob;
 
@@ -32,6 +34,11 @@ namespace MartinCostello.AzureFunctions.Blob
         /// <inheritdoc />
         public async Task UploadBytesAsync(string containerName, string blobName, byte[] buffer, IDictionary<string, string> metadata)
         {
+            if (buffer == null)
+            {
+                throw new ArgumentNullException(nameof(buffer));
+            }
+
             CloudBlockBlob blob = await GetBlobAsync(containerName, blobName);
 
             await blob.UploadFromByteArrayAsync(buffer, 0, buffer.Length);
@@ -45,6 +52,27 @@ namespace MartinCostello.AzureFunctions.Blob
 
             await blob.UploadTextAsync(content);
             await SetMetadataAsync(blob, metadata);
+        }
+
+        /// <summary>
+        /// Sets the metadata on the specified cloud block blob as an asynchronous operation.
+        /// </summary>
+        /// <param name="blob">The blob to set the metadata for.</param>
+        /// <param name="metadata">The metadata to set for the blob.</param>
+        /// <returns>
+        /// A <see cref="Task"/> representing the asynchronous operation to set the metadata for <paramref name="blob"/>.
+        /// </returns>
+        private static async Task SetMetadataAsync(CloudBlockBlob blob, IDictionary<string, string> metadata)
+        {
+            if (metadata?.Count > 0)
+            {
+                foreach (var pair in metadata.Where((p) => !string.IsNullOrEmpty(p.Value)))
+                {
+                    blob.Metadata[pair.Key] = pair.Value;
+                }
+
+                await blob.SetMetadataAsync();
+            }
         }
 
         /// <summary>
@@ -75,27 +103,6 @@ namespace MartinCostello.AzureFunctions.Blob
         {
             CloudBlobContainer container = await EnsureContainerAsync(containerName);
             return container.GetBlockBlobReference(blobName);
-        }
-
-        /// <summary>
-        /// Sets the metadata on the specified cloud block blob as an asynchronous operation.
-        /// </summary>
-        /// <param name="blob">The blob to set the metadata for.</param>
-        /// <param name="metadata">The metadata to set for the blob.</param>
-        /// <returns>
-        /// A <see cref="Task"/> representing the asynchronous operation to set the metadata for <paramref name="blob"/>.
-        /// </returns>
-        private async Task SetMetadataAsync(CloudBlockBlob blob, IDictionary<string, string> metadata)
-        {
-            if (metadata?.Count > 0)
-            {
-                foreach (var pair in metadata.Where((p) => !string.IsNullOrEmpty(p.Value)))
-                {
-                    blob.Metadata[pair.Key] = pair.Value;
-                }
-
-                await blob.SetMetadataAsync();
-            }
         }
     }
 }

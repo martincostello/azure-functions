@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -56,11 +57,16 @@ namespace MartinCostello.AzureFunctions.AppService.Client
             byte[] certificate,
             string password)
         {
+            if (application == null)
+            {
+                throw new ArgumentNullException(nameof(application));
+            }
+
             using (var certificateFile = new TemporaryCertificateFile(certificate))
             {
                 // See https://github.com/Azure/azure-libraries-for-net/issues/56#issuecomment-335958896
                 await application.Manager.AppServiceCertificates
-                    .Define(string.Format("{0}##{1}#", thumbprint, application.Region.Name))
+                    .Define(string.Format(CultureInfo.InvariantCulture, "{0}##{1}#", thumbprint, application.Region.Name))
                     .WithRegion(application.Region)
                     .WithExistingResourceGroup(application.ResourceGroupName)
                     .WithPfxFile(certificateFile.FileName)
