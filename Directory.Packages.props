@@ -3,7 +3,7 @@
     <MicrosoftAzureManagementFluentVersion>1.36.1</MicrosoftAzureManagementFluentVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="coverlet.msbuild" Version="3.0.1" />
+    <PackageVersion Include="coverlet.msbuild" Version="3.0.2" />
     <PackageVersion Include="JustEat.HttpClientInterception" Version="3.1.0" />
     <PackageVersion Include="MartinCostello.Logging.XUnit" Version="0.1.0" />
     <PackageVersion Include="Microsoft.Azure.Management.AppService.Fluent" Version="$(MicrosoftAzureManagementFluentVersion)" />
