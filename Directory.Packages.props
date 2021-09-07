@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <MicrosoftAzureManagementFluentVersion>1.37.1</MicrosoftAzureManagementFluentVersion>
+    <MicrosoftAzureManagementFluentVersion>1.38.0</MicrosoftAzureManagementFluentVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="coverlet.msbuild" Version="3.1.0" />
