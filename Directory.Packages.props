@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
     <MicrosoftAzureManagementFluentVersion>1.38.0</MicrosoftAzureManagementFluentVersion>
-    <NodaTimeVersion>3.0.6</NodaTimeVersion>
+    <NodaTimeVersion>3.0.7</NodaTimeVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="coverlet.msbuild" Version="3.1.0" />
